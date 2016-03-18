@@ -6,6 +6,8 @@ The links shown will be different depending whether the user has logged in.-->
 
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
 
 {% block content %}
 
@@ -38,6 +40,8 @@ The links shown will be different depending whether the user has logged in.-->
     <a href="/leaderboard/">View Leaderboard</a><br />
 
     <a href="/game_instructions/">Game Instructions</a><br />
+
+    {% endif %}
 
 
 
