@@ -1,4 +1,3 @@
-import imp
 from zombieapp.engine import main
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
@@ -10,6 +9,8 @@ from zombieapp.engine.game import PlayerState
 
 # Create your views here.
 
+g = Game()
+
 def game(request):
 
     context_dict={}
@@ -18,9 +19,9 @@ def game(request):
     # display the current state of the game,
     # then check what the player wants to do
 
-    g = Game()
+    global g
     context_dict["gameProg"] = g
-    while not g.is_game_over():
+    """while not g.is_game_over():
         #kick off the day
         g.start_new_day()
         context_dict["gameProg"] = g
@@ -32,19 +33,37 @@ def game(request):
 
         # end the day
         g.end_day()
-        context_dict["gameProg"] = g
+        context_dict["gameProg"] = g"""
 
     
-    return render("game over!")
+    return render(request,'zombieapp/game.html', context_dict)
+
+def index(request):
+    return render(request, 'zombieapp/index.html')
+
+def login(request):
+    return render(request,'zombieapp/login.html')
+
+def register(request):
+    return render(request,'zombieapp/register.html')
+
+def game_instructions(request):
+    return render(request,'zombieapp/game_instructions.html')
+
+def profile(request):
+    return render(request,'zombieapp/profile.html')
+
+def leaderboard(request):
+    return render(request, 'zombieapp/leaderboard.html')
     
 def do_action(action):
     g.take_turn(g, action)
     return g
-    
-    
+ 
 def show_game_screen_ajax(request, g):
     d = main.show_game_screen(g)
     return HttpResponse("response from game")
     
 def turn_options_ajax(request, g):
     d = main.turn_options(g)
+

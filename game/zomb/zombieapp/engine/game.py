@@ -39,9 +39,8 @@ class PlayerState(object):
         :return:
         """
         return MAX_SEARCH_TIME  - (math.floor(min(self.party, MAX_SEARCH_TIME)/2))
-
-
-    def __str__(self):
+        
+    def status(self):
         d = {}
         d["party"] = self.party
         d["ammo"] = self.ammo
@@ -49,6 +48,10 @@ class PlayerState(object):
         d["kills"] = self.kills
         d["days"] = self.days
         return d
+
+
+    def __str__(self):
+        return 'People: {party} Food: {food} Ammo: {ammo} Kills: {kills} Days: {days}'.format(**self.__dict__)
 
 
 ACTIONS = {

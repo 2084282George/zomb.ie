@@ -3,9 +3,38 @@
 {% load staticfiles %}
 
 
-{% block body_block %}
+{% block content %}
+
 
     Here's where the game will be
+    
     <button id="about-btn"> Click Me - I'm Javascript on Speed</button>
+ 
+    <!-- if the game is on a street -->
+    <button id="move-btn">Move</button>
+    
+    <button id="enter-btn">Enter</button>
 
-{% endblock %}
+
+    
+    <!-- if the game is in a house -->
+
+    <button id="search-btn">Search</button>
+    
+    <button id="exit-btn">Exit</button>
+
+    
+
+    
+    <!-- if the game is in a fight with a zombie -->
+
+    <button id="fight-btn">Fight</button>
+    
+    <button id="run-btn">Run</button>
+
+    
+    
+    
+    <button id="wait-btn">Wait</button>
+
+{% endblock content %}
