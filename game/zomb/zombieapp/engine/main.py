@@ -35,28 +35,19 @@ def main():
 
 
 def show_game_screen(g):
-    print "game started"
-    print g.player_state
-    print ""
-    print "Day: {0}, Time left in day: {1}".format(g.player_state.days, g.time_left)
-    print "------------------------------------------"
+    d = {}
+    d = show_update_template(g)
 
-    show_update_template(g)
-
-    print "------------------------------------------"
     if g.game_state == 'STREET':
-        show_street_template(g)
+        d.update(show_street_template(g))
     if g.game_state == 'HOUSE':
-        show_house_template(g)
+        d.update(show_house_template(g))
     if g.game_state == 'ZOMBIE':
-        show_zombie_template(g)
-
-    print "------------------------------------------"
+        d.update(show_zombie_template(g))
+    return d
 
 
 def turn_options(g):
-
-    turn = raw_input('What do you want to do (enter full word i.e. MOVE, SEARCH, etc): ') 
 
     if turn in ['MOVE','SEARCH']:
         pos = int(raw_input('where (enter number of house/room): '))
@@ -66,51 +57,47 @@ def turn_options(g):
 
 
 def show_street_template(g):
-    print "You are in a Street!"
+    d = {}
     print g.street
     i = 0
     for house in g.street.house_list:
-
-        print "House: ", i, house
-
+        d["house{0}".format(i)] = house
         i += 1
-    print g.street.get_current_house()
+    d[current_house] = g.street.get_current_house()
+    return d
 
 def show_house_template(g):
-    print"You are in a house!"
-    print g.street.get_current_house()
-    print g.street.get_current_house().get_current_room()
+    d = {}
+    d[current_house] = g.street.get_current_house()
+    d[current_room] = g.street.get_current_house().get_current_room()
+    return d
 
 def show_zombie_template(g):
+    d = {}
     current_room = g.street.get_current_house().get_current_room()
-    print "zaarrrr rrrgh: {0} Zombies!!!!".format(current_room.zombies)
+    d["zombies"]  = current_room.zombies
+    return d
 
 
 def show_update_template(g):
+    d = {}
+    if g.update_state.party!=0:
+        d["party_inc"] = g.update_state.party
 
-    if g.update_state.party<0:
-        print "You lost: {0} people".format(abs(g.update_state.party))
 
-    if g.update_state.party>0:
-        print "{0} more people have joined your party".format(g.update_state.party)
+    if g.update_state.ammo != 0:
+        d["ammo_inc"] = g.update_state.ammo
 
-    if g.update_state.ammo > 0:
-        print "You found: {0} units of ammo".format(g.update_state.ammo)
+    if g.update_state.food != 0:
+        d["food_inc2"] = g.update_state.food
 
-    if g.update_state.ammo < 0:
-        print "You used: {0} units of ammo".format(abs(g.update_state.ammo))
-
-    if g.update_state.food > 0:
-        print "You found: {0} units of food".format(g.update_state.food)
-
-    if g.update_state.food < 0:
-        print "You used: {0} units of food".format(abs(g.update_state.food))
 
     if g.update_state.kills > 0:
-        print "You killed: {0} zombies".format(g.update_state.kills)
+        d["kill_inc"] = g.update_state.kills
 
     if g.update_state.days > 0:
-        print "New Day: You survived another day!"
+        d["day_inc"] = g.update_state.days
+    return d
 
 if __name__ ==  "__main__":
     main()

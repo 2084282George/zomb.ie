@@ -42,7 +42,13 @@ class PlayerState(object):
 
 
     def __str__(self):
-        return 'People: {party} Food: {food} Ammo: {ammo} Kills: {kills} Days: {days}'.format(**self.__dict__)
+        d = {}
+        d["party"] = self.party
+        d["ammo"] = self.ammo
+        d["food"] = self.food
+        d["kills"] = self.kills
+        d["days"] = self.days
+        return d
 
 
 ACTIONS = {

@@ -1,6 +1,6 @@
 import imp
 from zombieapp.engine import main
-from django.shortcuts import render, render_to_respons
+from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from zombieapp.engine.game import Game
 from zombieapp.engine.streetfactory import StreetFactory
@@ -25,7 +25,8 @@ def game(request):
         g.start_new_day()
         context_dict["gameProg"] = g
         while not g.is_day_over() and not g.is_game_over():
-            main.show_game_screen(g)
+            show_game_screen_ajax(request, g)
+            turn_options_ajax(request, g)
             main.turn_options(g)
             context_dict["gameProg"] = g
 
@@ -36,7 +37,14 @@ def game(request):
     
     return render("game over!")
     
-def do_action(action){
+def do_action(action):
     g.take_turn(g, action)
     return g
-    }
+    
+    
+def show_game_screen_ajax(request, g):
+    d = main.show_game_screen(g)
+    return HttpResponse("response from game")
+    
+def turn_options_ajax(request, g):
+    d = main.turn_options(g)

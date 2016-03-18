@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 
 <!-- This is the base html file with footers, headers and CSS link-->
+{% load staticfiles %}
+
+<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/zomb-ajax.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "stylesheet.css" %}" />
 
 <html lang="en">
 <head>
-     <link rel="stylesheet" type="text/css" href="URL/TO/stylesheet.css" />
+
     <title>Zomb.ie</title>
 </head>
 
@@ -13,7 +18,7 @@
 </header>
 
 <body>
-
+<button id="about-btn"> Click Me - I'm Javascript on Speed</button>
 {% block content %}{% endblock content %}
 
 </body>
