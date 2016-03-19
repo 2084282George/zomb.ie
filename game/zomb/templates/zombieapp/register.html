@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 
-<!-- registering form-->
-
 {% extends "base.html" %}
-
 
 {% block content %}
 
-<!-- registering form needs to be implemented-->
+    <form id="user_form" method="post" action="/register/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <br>Username:<input type="text" name="username"><br>
+        <br>Password:<input type="password" name="password"><br>
+        <br>Picture:<input type="file" name="picture"><br>
+        <br><input type="submit" value="Register">
+    </form>
 
 {% endblock content %}

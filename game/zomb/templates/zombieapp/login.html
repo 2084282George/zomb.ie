@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-
 {% extends "base.html" %}
 
 {% block content %}
 
-<!-- Login form needs to be properly done -->
+    {% load staticfiles %}
 
-    <h1>Login to Zomb.ie</h1>
+    <img src="{% static "images/logo_v1.jpg" %}">
 
-<form id="login_form" method="post" action="/login/">
-            {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
-            <br />
-            Password: <input type="password" name="password" value="" size="50" />
-            <br />
-
-            <input type="submit" value="submit" />
-        </form>
+    <form id="login_form" method="post" action="/login/">
+        {% csrf_token %}
+        <br>Username: <input type="text" name="username"><br>
+        <br>Password: <input type="password" name="password"><br>
+        <br><input type="submit" value="Login">
+    </form>
 
 {% endblock content %}

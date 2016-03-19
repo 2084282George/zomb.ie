@@ -1,28 +1,29 @@
 <!DOCTYPE html>
+<html>
 
-<!-- This is the base html file with footers, headers and CSS link-->
+{% load staticfiles %}
 
-<html lang="en">
 <head>
-     <link rel="stylesheet" type="text/css" href="URL/TO/stylesheet.css" />
-    <title>Zomb.ie</title>
-</head>
 
-<header>
-    <p>Links to different pages</p>
-</header>
+    <link rel="stylesheet" type="text/css" href={% static "stylesheet.css" %}>
+    <title>Zomb.ie</title>
+
+</head>
 
 <body>
 
-{% block content %}{% endblock content %}
+    <header>
+        <a href="/login/">Login</a>
+        <a href="/logout/">Logout</a>
+        <a href="/register/">Register</a>
+        <a href="/profile/">Profile</a>
+        <a href="/game/">Game</a>
+        <a href="/leaderboard/">Leaderboard</a>
+        {% if user.username %}<br>Logged in  as <strong>{{ user.username }}</strong>{% endif %}
+    </header>
+
+    {% block content %}{% endblock content %}
 
 </body>
-
-
-<footer>
-    <p>Zomb.ie</p>
-    <p>Links to different pages</p>
-
-</footer>
 
 </html>

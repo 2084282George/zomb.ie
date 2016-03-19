@@ -1,6 +1,6 @@
 __author__ = 'leif'
 from faker import Factory as FakeFactory
-from house import House
+from zombieapp.engine.house import House
 import math
 import random
 

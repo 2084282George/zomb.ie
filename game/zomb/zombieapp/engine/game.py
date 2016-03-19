@@ -1,7 +1,7 @@
 __author__ = 'leif'
 import math
 import random
-from streetfactory import StreetFactory
+from zombieapp.engine.streetfactory import StreetFactory
 from copy import deepcopy
 
 MAX_MOVE_TIME = 10

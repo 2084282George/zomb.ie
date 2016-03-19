@@ -1,10 +1,24 @@
 {% extends 'base.html' %}
 
-{% load staticfiles %}
+{% block content %}
 
-
-{% block body_block %}
-
-    Here's where the game will be
+    <pre>{{ message }}</pre>
+    {% for option in options %}
+        <form name="game_form" method ="post" action="/game/">
+            {% csrf_token %}
+            {% if option == 'MOVE' or option == 'SEARCH' %}
+                <p>
+                <input type="text" name="move" value="{{ option }}" hidden>
+                Enter number of house/room:<input type="text" name="pos">
+                <input type="submit" value="{{ option }}">
+                </p>
+            {% else %}
+                <p>
+                <input type="text" name="move" value="{{ option }}" hidden>
+                <input type="submit" value="{{ option }}">
+                </p>
+            {% endif %}
+        </form>
+    {% endfor %}
 
 {% endblock %}

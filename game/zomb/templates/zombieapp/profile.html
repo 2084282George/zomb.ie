@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 
-<!-- used for viewing, editing, updating and maintaining profile-->
-
 {% extends "base.html" %}
-
 
 {% block content %}
 
-<!-- profile maintanance needs to be implemented
+{% load staticfiles %}
 
-Needs to list:
--Username
--Picture
--How many games played
--Average and best number of days survived
--Zombie kills
+<h1>Profile</h1>
+<p>Username:{{ user.username }}</p>
+<img src="{{ player.picture }}">
+<p>Games played:{{ statistics.games }}</p>
+<p>Best days survived:{{ statistics.best_days }}</p>
+<p>Average days survived:{{ statistics.avg_days }}</p>
+<p>Best kills:{{ statistics.best_kills }}</p>
+<p>Average kills:{{ statistics.avg_kills }}</p>
+<p>Best party:{{ statistics.party }}</p>
 
--Badges achieved
+    {% for badge in badges %}
+        <p>{{ badge }}</p>
+    {% endfor %}
 
 {% endblock content %}

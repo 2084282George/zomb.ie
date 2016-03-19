@@ -137,4 +137,4 @@ class Room(object):
         self.visited = True
 
     def __str__(self):
-        return 'Room contains People: {people} Food: {food} Ammo: {ammo} Zombies: {zombies} Visted: {visited}'.format(**self.__dict__)
+        return 'Room contains People: {people} Food: {food} Ammo: {ammo} Zombies: {zombies} Visited: {visited}'.format(**self.__dict__)
