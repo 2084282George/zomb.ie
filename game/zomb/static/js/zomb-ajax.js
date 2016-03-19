@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 $(document).ready( function() {
 
     $("#about-btn").click( function(event) {
@@ -48,3 +49,15 @@ $(document).ready( function() {
     
 }); */
 
+=======
+function do_move() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+      document.getElementById(request).innerHTML = xhttp.responseText;
+    }
+  };
+  xhttp.open("GET", "request.txt", true);
+  xhttp.send();
+}
+>>>>>>> 716d89f7baad635312d03ee2c2910872989e8d2a

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
-{% load staticfiles %}
+{% block content %}
 
+<<<<<<< HEAD
 
 {% block content %}
 
@@ -36,5 +37,25 @@
     
     
     <button id="wait-btn">Wait</button>
+=======
+    <pre>{{ message }}</pre>
+    {% for option in options %}
+        <form name="game_form" method ="post" action="/game/">
+            {% csrf_token %}
+            {% if option == 'MOVE' or option == 'SEARCH' %}
+                <p>
+                <input type="text" name="move" value="{{ option }}" hidden>
+                Enter number of house/room:<input type="text" name="pos">
+                <input type="submit" value="{{ option }}">
+                </p>
+            {% else %}
+                <p>
+                <input type="text" name="move" value="{{ option }}" hidden>
+                <input type="submit" value="{{ option }}">
+                </p>
+            {% endif %}
+        </form>
+    {% endfor %}
+>>>>>>> 716d89f7baad635312d03ee2c2910872989e8d2a
 
 {% endblock content %}

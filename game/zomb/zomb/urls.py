@@ -4,15 +4,16 @@ from django.conf import settings
 from zombieapp import views
 
 urlpatterns = patterns('',
+<<<<<<< HEAD
     # Examples:
     # url(r'^$', 'zomb.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$',views.index, name='index'),
+=======
+>>>>>>> 716d89f7baad635312d03ee2c2910872989e8d2a
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^zombieapp/', include('zombieapp.urls')),
-  
-
+    url(r'', include('zombieapp.urls')),
 )
 
 if settings.DEBUG:

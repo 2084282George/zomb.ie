@@ -1,18 +1,26 @@
 <!DOCTYPE html>
+<html>
 
+<<<<<<< HEAD
 <!-- This is the base html file with footers, headers and CSS link-->
 {% load staticfiles %}
 
 <script src="{% static "js/jquery.js" %}"></script>
 <script src="{% static "js/zomb-ajax.js" %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static "stylesheet.css" %}" />
+=======
+{% load staticfiles %}
+>>>>>>> 716d89f7baad635312d03ee2c2910872989e8d2a
 
-<html lang="en">
 <head>
 
+<<<<<<< HEAD
+=======
+    <link rel="stylesheet" type="text/css" href={% static "stylesheet.css" %}>
+>>>>>>> 716d89f7baad635312d03ee2c2910872989e8d2a
     <title>Zomb.ie</title>
-</head>
 
+<<<<<<< HEAD
 <header>
     <a href = "/">Home</a>
     <a href = "/zombieapp/leaderboard">Leaderboard</a>
@@ -21,17 +29,32 @@
     <a href = "/zombieapp/login">Login</a>
     <a href = "/zombieapp/register">Register</a>
 </header>
+=======
+</head>
+>>>>>>> 716d89f7baad635312d03ee2c2910872989e8d2a
 
 <body>
 
-{% block content %}{% endblock content %}
+    <header>
+        <a href="/login/">Login</a>
+        <a href="/logout/">Logout</a>
+        <a href="/register/">Register</a>
+        <a href="/profile/">Profile</a>
+        <a href="/game/">Game</a>
+        <a href="/leaderboard/">Leaderboard</a>
+        {% if user.username %}<br>Logged in  as <strong>{{ user.username }}</strong>{% endif %}
+    </header>
 
-</body>
+    {% block content %}{% endblock content %}
 
+<<<<<<< HEAD
 
 <footer>
     <p>Zomb.ie</p>
 
 </footer>
+=======
+</body>
+>>>>>>> 716d89f7baad635312d03ee2c2910872989e8d2a
 
 </html>
