@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<link href="/static/game.css"  type="text/css" rel="stylesheet">
+
     <pre>{{ message }}</pre>
     {% for option in options %}
         <form name="game_form" method ="post" action="/game/">
