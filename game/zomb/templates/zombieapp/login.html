@@ -2,15 +2,19 @@
 
 {% block content %}
 
-    {% load staticfiles %}
+{% load staticfiles %}
 
-    <img src="{% static "images/logo_v1.jpg" %}">
+<link href="/static/login.css"  type="text/css" rel="stylesheet">
 
-    <form id="login_form" method="post" action="/login/">
-        {% csrf_token %}
-        <br>Username: <input type="text" name="username"><br>
-        <br>Password: <input type="password" name="password"><br>
-        <br><input type="submit" value="Login">
-    </form>
+<link href="http://getbootstrap.com/examples/signin/signin.css" rel="stylesheet">
 
-{% endblock content %}
+<form class="form-signin" role="form" method="post" action=".">
+{% csrf_token %}
+
+<input class="form-control" placeholder="Username" id="id_username" maxlength="254" name="username" type="text" required autofocus=""/>
+<input type="password" class="form-control" placeholder="Password" id="id_password" name="password"  required />
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" >Login</button>
+        </form>
+
+{% endblock %}
