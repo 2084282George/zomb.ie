@@ -131,8 +131,8 @@ def game(request):
     over = False
 
     player.statistics = dill.loads(player.statistics)
-    if  g.player_state.party > player.statistics['party']:
-            player.statistics['party'] = party
+    if g.player_state.party > player.statistics['party']:
+            player.statistics['party'] = g.player_state.party
     player.statistics = dill.dumps(player.statistics)
 
     if g.is_game_over():
