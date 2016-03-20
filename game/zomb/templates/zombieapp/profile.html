@@ -6,34 +6,57 @@
 
 {% load staticfiles %}
 
-<h1>Profile</h1>
-<p>Username:{{ user.username }}</p>
-<img src="{{ player.picture }}">
-<p>Games played:{{ statistics.games }}</p>
-<p>Best days survived:{{ statistics.best_days }}</p>
-<p>Average days survived:{{ statistics.avg_days }}</p>
-<p>Best kills:{{ statistics.best_kills }}</p>
-<p>Average kills:{{ statistics.avg_kills }}</p>
-<p>Best party:{{ statistics.party }}</p>
+    {% if isProfile %}
+        <h1>Profile</h1>
+        <p>Username:{{ user.username }}</p>
+        <img src="{{ player.picture }}">
+        <p>Games played:{{ statistics.games }}</p>
+        <p>Best days survived:{{ statistics.best_days }}</p>
+        <p>Average days survived:{{ statistics.avg_days }}</p>
+        <p>Best kills:{{ statistics.best_kills }}</p>
+        <p>Average kills:{{ statistics.avg_kills }}</p>
+        <p>Best party:{{ statistics.party }}</p>
 
-    {% if flag %}
-        <p>Badges:</p>
+            {% if flag %}
+                <p>Badges:</p>
+            {% endif %}
+            {% for badge in badges %}
+                <p>{{ badge }}</p>
+            {% endfor %}
+
+        <form method="post" action="/profile/">
+            {% csrf_token %}
+            <input type="password" name="password" required>
+            <input type="submit" value="Change password">
+        </form>
+
+        <form method="post" action="/profile/">
+            {% csrf_token %}
+            <br>
+            <input type="file" name="picture" required>
+            <input type="submit" value="Change picture">
+        </form>
+    {% else %}
+        {% if profileExists  %}
+            <h1>Profile</h1>
+            <p>Username:{{ profile_name }}</p>
+            <img src="{{ prof.picture }}">
+            <p>Games played:{{ profStatistics.games }}</p>
+            <p>Best days survived:{{ profStatistics.best_days }}</p>
+            <p>Average days survived:{{ profStatistics.avg_days }}</p>
+            <p>Best kills:{{ profStatistics.best_kills }}</p>
+            <p>Average kills:{{ profStatistics.avg_kills }}</p>
+            <p>Best party:{{ profStatistics.party }}</p>
+
+                {% if profFlag %}
+                    <p>Badges:</p>
+                {% endif %}
+                {% for badge in profBadges %}
+                    <p>{{ badge }}</p>
+                {% endfor %}
+        {% else %}
+            <p>No player with username {{profile_name}}</p>
+        {% endif %}
+
     {% endif %}
-    {% for badge in badges %}
-        <p>{{ badge }}</p>
-    {% endfor %}
-
-<form method="post" action="/profile/">
-    {% csrf_token %}
-    <input type="password" name="password" required>
-    <input type="submit" value="Change password">
-</form>
-
-<form method="post" action="/profile/">
-    {% csrf_token %}
-    <br>
-    <input type="file" name="picture" required>
-    <input type="submit" value="Change picture">
-</form>
-
 {% endblock content %}

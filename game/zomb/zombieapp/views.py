@@ -3,6 +3,7 @@ from zombieapp.engine.game import Game
 from zombieapp.engine.main import *
 from zombieapp.models import Player, Guest
 from zombieapp.forms import UserForm, PlayerForm
+from django.contrib.auth.models import User
 import django, dill
 
 def home(request):
@@ -14,14 +15,14 @@ def logout(request):
 
 def login(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect("/profile/")
+        return HttpResponseRedirect("/profile/"+request.user.username)
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = django.contrib.auth.authenticate(username=username, password=password)
         if user and user.is_active:
             django.contrib.auth.login(request, user)
-            return HttpResponseRedirect("/profile/")
+            return HttpResponseRedirect("/profile/"+request.user.username)
         else:
             print "Invalid login details: {0}, {1}".format(username, password)
             return HttpResponse("Invalid login details supplied. <a href='/login/'>Return</a>")
@@ -54,41 +55,87 @@ def instructions(request):
 
 def leaderboard(request):
 
+    for player in Player.objects.all():
+        statistics = dill.loads(player.statistics)
+        player.best_kills = statistics['best_kills']
+        player.best_days = statistics['best_days']
+        player.avg_kills = statistics['avg_kills']
+        player.avg_days = statistics['avg_days']
+        player.party = statistics['party']
+        player.save()
+    best_kills_leaderboard = Player.objects.order_by('-best_kills')[:50]
+    best_days_leaderboard = Player.objects.order_by('-best_days')[:50]
+    avg_days_leaderboard = Player.objects.order_by('-avg_days')[:50]
+    avg_kills_leaderboard = Player.objects.order_by('-avg_kills')[:50]
+    party_leaderboard = Player.objects.order_by('-party')[:50]
     return render(request, "zombieapp/leaderboard.html", {
-        "user": request.user,
+        "user": request.user,"best_kills_leaderboard": best_kills_leaderboard,
+        "best_days_leaderboard":best_days_leaderboard,
+        "avg_days_leaderboard":avg_days_leaderboard,
+        "avg_kills_leaderboard":avg_kills_leaderboard,
+        "party_leaderboard":party_leaderboard
     })
 
-def profile(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect("/login/")
-    player = Player()
-    try:
-        player = Player.objects.get(user=request.user)
-    except:
-        player.user = request.user
-        player.save()
-    badges = dill.loads(player.badges)
+def profile(request,profile_name):
+
+    user = 0
+    statistics = 0
+    badges = 0
+    player = 0
     flag = True
-    if len(badges) == 0:
-        flag = False
-    password = request.POST.get("password")
-    if password:
+    players = 0
+    username = 0
+    if request.user.is_authenticated():
+        player = Player()
         try:
-            request.user.set_password(password)
-            request.user.save()
-            logout(request)
-            return HttpResponseRedirect('/login/')
+            player = Player.objects.get(user=request.user)
         except:
-            return HttpResponse("Invalid password")
-    if "picture" in request.FILES:
-        player.picture = request.FILES["picture"]
-        player.save()
+            player.user = request.user
+            player.save()
+        badges = dill.loads(player.badges)
+        if len(badges) == 0:
+            flag = False
+        password = request.POST.get("password")
+        if password:
+            try:
+                request.user.set_password(password)
+                request.user.save()
+                logout(request)
+                return HttpResponseRedirect('/login/')
+            except:
+                return HttpResponse("Invalid password")
+        if "picture" in request.FILES:
+            player.picture = request.FILES["picture"]
+            player.save()
+        statistics=dill.loads(Player.objects.get(user=request.user).statistics)
+        players = Player.objects.all()
+        user = request.user
+        username = user.username
+    prof = 0
+    profStatistics = 0
+    profFlag = True
+    if(User.objects.all().filter(username=profile_name).exists()):
+        prof = User.objects.get(username=profile_name)
+        if(Player.objects.all().filter(user=prof).exists()):
+            prof = Player.objects.get(user=prof)
+            profStatistics = dill.loads(prof.statistics)
+            profBadges = dill.loads(prof.badges)
+            if len(profBadges)==0:
+                profFlag = False
     return render(request, "zombieapp/profile.html", {
-        "user": request.user,
-        "statistics": dill.loads(Player.objects.get(user=request.user).statistics),
+        "user": user,
+        "statistics": statistics,
         "badges": badges,
         "player": player,
         "flag": flag,
+        "players": players,
+        "prof":prof,
+        "isProfile": profile_name == username,
+        "profileExists": prof != 0,
+        "profStatistics": profStatistics,
+        "profFlag": profFlag,
+        "profile_name": profile_name,
+        "profBadges": profBadges
     })
 
 def game(request):

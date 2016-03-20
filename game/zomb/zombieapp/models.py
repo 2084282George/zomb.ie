@@ -13,6 +13,12 @@ class Player(models.Model):
         {"games": 0, "best_days": 0, "avg_days": 0.0, "best_kills": 0, "avg_kills": 0.0, "party": 0})
     )
 
+    best_kills = models.IntegerField(default=0)
+    best_days = models.IntegerField(default=0)
+    avg_days = models.FloatField(default=0.0)
+    avg_kills = models.FloatField(default=0.0)
+    party = models.IntegerField(default=0)
+
     def __unicode__(self):
         return self.user.username
 

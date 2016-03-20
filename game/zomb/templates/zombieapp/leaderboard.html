@@ -4,6 +4,74 @@
 
 {% block content %}
 
+<b>Most kills in a game:</b>
+<table border="1" width="50%">
+    <tr>
+        <th>Player</th>
+        <th>Most kills</th>
+    </tr>
+    {% for player in best_kills_leaderboard %}
+    <tr>
+        <td><a href="/profile/{{player.user.username}}/">{{player.user.username}}</a></td>
+        <td>{{player.best_kills}}</td>
+    </tr>
+    {% endfor %}
+</table>
 
+<b>Most days survived in a game:</b>
+<table border="1" width="50%">
+    <tr>
+        <th>Player</th>
+        <th>Most days</th>
+    </tr>
+    {% for player in best_days_leaderboard %}
+    <tr>
+        <td><a href="/profile/{{player.user.username}}/">{{player.user.username}}</a></td>
+        <td>{{player.best_days}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<b>Most kills on average in a game:</b>
+<table border="1" width="50%">
+    <tr>
+        <th>Player</th>
+        <th>Average kills</th>
+    </tr>
+    {% for player in avg_kills_leaderboard %}
+    <tr>
+        <td><a href="/profile/{{player.user.username}}/">{{player.user.username}}</a></td>
+        <td>{{player.avg_kills}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<b>Most days survived on average in a game:</b>
+<table border="1" width="50%">
+    <tr>
+        <th>Player</th>
+        <th>Average days</th>
+    </tr>
+    {% for player in avg_days_leaderboard %}
+    <tr>
+        <td><a href="/profile/{{player.user.username}}/">{{player.user.username}}</a></td>
+        <td>{{player.avg_days}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<b>Biggest party in a game:</b>
+<table border="1" width="50%">
+    <tr>
+        <th>Player</th>
+        <th>Biggest party</th>
+    </tr>
+    {% for player in party_leaderboard %}
+    <tr>
+        <td><a href="/profile/{{player.user.username}}/">{{player.user.username}}</a></td>
+        <td>{{player.party}}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock content %}
