@@ -24,14 +24,14 @@ def main():
     print "Aaarrrgh: You are dead! Game Over!"
 
 def show_game_screen(g):
-    s = "------------------------------------------" + linesep
-    s += "ZZZZZ   OOO    MM    MM  BBBB   III  EEEEE" + linesep
-    s += "   Z   OO OO   MMM  MMM  B   B   I   E" + linesep
-    s += "  Z   OO   OO  MM MM MM  BBBB    I   EEE" + linesep
-    s += " Z     OO OO   MM    MM  B   B   I   E" + linesep
-    s += "ZZZZZ   OOO    MM    MM  BBBBB  III  EEEEE" + linesep
-    s += "------------------------------------------" + linesep
-    s += "Player Status" + linesep
+    #s = "------------------------------------------" + linesep
+    #s += "ZZZZZ   OOO    MM    MM  BBBB   III  EEEEE" + linesep
+    #s += "   Z   OO OO   MMM  MMM  B   B   I   E" + linesep
+    #s += "  Z   OO   OO  MM MM MM  BBBB    I   EEE" + linesep
+    #s += " Z     OO OO   MM    MM  B   B   I   E" + linesep
+    #s += "ZZZZZ   OOO    MM    MM  BBBBB  III  EEEEE" + linesep
+    #s += "------------------------------------------" + linesep
+    s = "Player Status" + linesep
     s += "------------------------------------------" + linesep
     s += str(g.player_state) + 2*linesep
     s += "Day: {0}, Time left in day: {1}".format(g.player_state.days, g.time_left) + linesep
@@ -48,7 +48,7 @@ def show_game_screen(g):
     return s
 
 def turn_options(g):
-    s = linesep + "Available options:" + str(g.turn_options()) + linesep
+    s = "Available options:" + str(g.turn_options()) + linesep
     s += "------------------------" + linesep
     return s + 'What do you want to do (enter full word i.e. MOVE, SEARCH, etc): '
 
@@ -61,7 +61,7 @@ def show_street_template(g):
         s += "House: " + str(i) + " " + str(house) + linesep
 
         i += 1
-    s += linesep + "------------------------------------------" + linesep
+    s += "------------------------------------------" + linesep
     s += "You are out the front of:" + linesep
     s += str(g.street.get_current_house()) + linesep
     return s

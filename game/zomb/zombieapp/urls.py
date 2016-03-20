@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     url(r'^leaderboard/$', views.leaderboard, name='leaderboard'),
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^game/$', views.game, name='game'),
-    url(r'^logout/$', views.logout, name='logout')
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^instructions/$', views.instructions, name='instructions'),
 )

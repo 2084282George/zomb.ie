@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from zombieapp.engine.game import Game
 from zombieapp.engine.main import *
-from zombieapp.models import Player
+from zombieapp.models import Player, Guest
+from zombieapp.forms import UserForm, PlayerForm
 import django, dill
 
 def home(request):
@@ -19,8 +20,8 @@ def login(request):
         password = request.POST.get('password')
         user = django.contrib.auth.authenticate(username=username, password=password)
         if user and user.is_active:
-                django.contrib.auth.login(request, user)
-                return HttpResponseRedirect("/profile/")
+            django.contrib.auth.login(request, user)
+            return HttpResponseRedirect("/profile/")
         else:
             print "Invalid login details: {0}, {1}".format(username, password)
             return HttpResponse("Invalid login details supplied. <a href='/login/'>Return</a>")
@@ -29,20 +30,27 @@ def login(request):
 
 def register(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        picture = request.POST.get('picture')
-        if True:
-            user = django.contrib.auth.models.User()
-            user.username = username
-            user.set_password(password)
-            player = Player()
-            player.user = user
-            if "picture" in request.FILES:
-                player.picture = request.FILES["picture"]
-            player.save()
+        user_form = UserForm(data=request.POST)
+        player_form = PlayerForm(data=request.POST)
+        if user_form.is_valid() and player_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
             user.save()
-    return render(request, 'zombieapp/register.html', {"user": request.user})
+            player = player_form.save(commit=False)
+            player.user = user
+            if 'picture' in request.FILES:
+                player.picture = request.FILES['picture']
+            player.save()
+            return HttpResponseRedirect('/login/')
+        else:
+            print user_form.errors, player_form.errors
+    else:
+        user_form = UserForm()
+        player_form = PlayerForm()
+    return render(request, 'zombieapp/register.html', {'user_form': user_form, 'player_form': player_form, "user": request.user})
+
+def instructions(request):
+    return render(request, "zombieapp/instructions.html", {"user": request.user})
 
 def leaderboard(request):
 
@@ -53,18 +61,46 @@ def leaderboard(request):
 def profile(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect("/login/")
+    player = Player()
+    try:
+        player = Player.objects.get(user=request.user)
+    except:
+        player.user = request.user
+        player.save()
+    badges = dill.loads(player.badges)
+    flag = True
+    if len(badges) == 0:
+        flag = False
+    password = request.POST.get("password")
+    if password:
+        try:
+            request.user.set_password(password)
+            request.user.save()
+            logout(request)
+            return HttpResponseRedirect('/login/')
+        except:
+            return HttpResponse("Invalid password")
+    if "picture" in request.FILES:
+        player.picture = request.FILES["picture"]
+        player.save()
     return render(request, "zombieapp/profile.html", {
         "user": request.user,
         "statistics": dill.loads(Player.objects.get(user=request.user).statistics),
-        "badges": dill.loads(Player.objects.get(user=request.user).badges),
-        "player": Player.objects.get(user=request.user),
+        "badges": badges,
+        "player": player,
+        "flag": flag,
     })
 
 def game(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect("/login/")
+    player = Guest()
+    if request.user.is_authenticated():
+        player = Player.objects.get(user=request.user)
+    else:
+        try:
+            player = Guest.objects.get()
+        except:
+            pass
 
-    player = Player.objects.get(user=request.user)
     g = Game()
 
     def save():
@@ -93,9 +129,11 @@ def game(request):
             g.take_turn(move)
 
     over = False
-    party = 0
-    if g.player_state.party > party:
-        party = g.player_state.party
+
+    player.statistics = dill.loads(player.statistics)
+    if  g.player_state.party > player.statistics['party']:
+            player.statistics['party'] = party
+    player.statistics = dill.dumps(player.statistics)
 
     if g.is_game_over():
         over = True
@@ -111,8 +149,6 @@ def game(request):
         player.statistics = dill.loads(player.statistics)
         player.badges = dill.loads(player.badges)
 
-        if party > player.statistics['party']:
-            player.statistics['party'] = party
         if player.statistics['best_days'] < g.player_state.days:
             player.statistics['best_days'] = g.player_state.days
         player.statistics['avg_days'] = \
@@ -124,32 +160,32 @@ def game(request):
         player.statistics['games'] += 1
 
         if player.statistics['games'] == 5:
-            player.badges += 'Games played (Bronze)'
+            player.badges += ['Games played (Bronze)']
         if player.statistics['games'] == 10:
-            player.badges += 'Games played (Silver)'
+            player.badges += ['Games played (Silver)']
         if player.statistics['games'] == 20:
-            player.badges += 'Games played (Gold)'
+            player.badges += ['Games played (Gold)']
 
-        if player.statistics['best_kills'] == 10:
-            player.badges += 'Zombies killed (Bronze)'
-        if player.statistics['best_kills'] == 20:
-            player.badges += 'Zombies killed (Silver)'
-        if player.statistics['best_kills'] == 50:
-            player.badges += 'Zombies killed (Gold)'
+        if player.statistics['best_kills'] >= 10 and 'Zombies killed (Bronze)' not in player.badges:
+            player.badges += ['Zombies killed (Bronze)']
+        if player.statistics['best_kills'] >= 20 and 'Zombies killed (Silver)' not in player.badges:
+            player.badges += ['Zombies killed (Silver)']
+        if player.statistics['best_kills'] >= 50 and 'Zombies killed (Gold)' not in player.badges:
+            player.badges += ['Zombies killed (Gold)']
 
-        if player.statistics['best_days'] == 5:
-            player.badges += 'Days survived (Bronze)'
-        if player.statistics['best_days'] == 10:
-            player.badges += 'Days survived (Silver)'
-        if player.statistics['best_days'] == 20:
-            player.badges += 'Days survived (Gold)'
+        if player.statistics['best_days'] >= 5 and 'Days survived (Bronze)' not in player.badges:
+            player.badges += ['Days survived (Bronze)']
+        if player.statistics['best_days'] >= 10 and 'Days survived (Silver)' not in player.badges:
+            player.badges += ['Days survived (Silver)']
+        if player.statistics['best_days'] >= 20 and 'Days survived (Gold)' not in player.badges:
+            player.badges += ['Days survived (Gold)']
 
-        if player.statistics['party'] == 10:
-            player.badges += 'Party size (Bronze)'
-        if player.statistics['party'] == 20:
-            player.badges += 'Party size (Silver)'
-        if player.statistics['party'] == 30:
-            player.badges += 'Party size (Gold)'
+        if player.statistics['party'] >= 10 and 'Party size (Bronze)' not in player.badges:
+            player.badges += ['Party size (Bronze)']
+        if player.statistics['party'] >= 20 and 'Party size (Silver)' not in player.badges:
+            player.badges += ['Party size (Silver)']
+        if player.statistics['party'] >= 30 and 'Party size (Gold)' not in player.badges:
+            player.badges += ['Party size (Gold)']
 
         player.statistics = dill.dumps(player.statistics)
         player.badges = dill.dumps(player.badges)

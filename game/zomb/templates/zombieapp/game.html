@@ -9,16 +9,12 @@
         <form name="game_form" method ="post" action="/game/">
             {% csrf_token %}
             {% if option == 'MOVE' or option == 'SEARCH' %}
-                <p>
                 <input type="text" name="move" value="{{ option }}" hidden>
                 Enter number of house/room:<input type="text" name="pos">
                 <input type="submit" value="{{ option }}">
-                </p>
             {% else %}
-                <p>
                 <input type="text" name="move" value="{{ option }}" hidden>
                 <input type="submit" value="{{ option }}">
-                </p>
             {% endif %}
         </form>
     {% endfor %}

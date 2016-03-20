@@ -16,8 +16,24 @@
 <p>Average kills:{{ statistics.avg_kills }}</p>
 <p>Best party:{{ statistics.party }}</p>
 
+    {% if flag %}
+        <p>Badges:</p>
+    {% endif %}
     {% for badge in badges %}
         <p>{{ badge }}</p>
     {% endfor %}
+
+<form method="post" action="/profile/">
+    {% csrf_token %}
+    <input type="password" name="password" required>
+    <input type="submit" value="Change password">
+</form>
+
+<form method="post" action="/profile/">
+    {% csrf_token %}
+    <br>
+    <input type="file" name="picture" required>
+    <input type="submit" value="Change picture">
+</form>
 
 {% endblock content %}

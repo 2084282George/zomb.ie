@@ -15,3 +15,10 @@ class Player(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+class Guest(models.Model):
+    game = PickledObjectField(default=dill.dumps(Game()))
+    badges = PickledObjectField(default=dill.dumps([]))
+    statistics = PickledObjectField(default=dill.dumps(
+        {"games": 0, "best_days": 0, "avg_days": 0.0, "best_kills": 0, "avg_kills": 0.0, "party": 0})
+    )
