@@ -9,7 +9,9 @@
     {% if isProfile %}
         <h1>Profile</h1>
         <p>Username:{{ user.username }}</p>
-        <img src="{{ player.picture }}">
+        {% if player.picture %}
+        <img src="{{ player.picture.url }}">
+        {% endif %}
         <p>Games played:{{ statistics.games }}</p>
         <p>Best days survived:{{ statistics.best_days }}</p>
         <p>Average days survived:{{ statistics.avg_days }}</p>
@@ -24,13 +26,13 @@
                 <p>{{ badge }}</p>
             {% endfor %}
 
-        <form method="post" action="/profile/">
+        <form method="post" action="/profile/{{player.user.username}}/">
             {% csrf_token %}
             <input type="password" name="password" required>
             <input type="submit" value="Change password">
         </form>
 
-        <form method="post" action="/profile/">
+        <form method="post" action="/profile/{{player.user.username}}/" enctype="multipart/form-data">
             {% csrf_token %}
             <br>
             <input type="file" name="picture" required>
@@ -40,7 +42,9 @@
         {% if profileExists  %}
             <h1>Profile</h1>
             <p>Username:{{ profile_name }}</p>
-            <img src="{{ prof.picture }}">
+            {% if prof.picture %}
+            <img src="{{ prof.picture.url }}">
+            {% endif %}
             <p>Games played:{{ profStatistics.games }}</p>
             <p>Best days survived:{{ profStatistics.best_days }}</p>
             <p>Average days survived:{{ profStatistics.avg_days }}</p>

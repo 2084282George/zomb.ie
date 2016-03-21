@@ -63,11 +63,11 @@ def leaderboard(request):
         player.avg_days = statistics['avg_days']
         player.party = statistics['party']
         player.save()
-    best_kills_leaderboard = Player.objects.order_by('-best_kills')[:50]
-    best_days_leaderboard = Player.objects.order_by('-best_days')[:50]
-    avg_days_leaderboard = Player.objects.order_by('-avg_days')[:50]
-    avg_kills_leaderboard = Player.objects.order_by('-avg_kills')[:50]
-    party_leaderboard = Player.objects.order_by('-party')[:50]
+    best_kills_leaderboard = Player.objects.order_by('-best_kills')[:20]
+    best_days_leaderboard = Player.objects.order_by('-best_days')[:20]
+    avg_days_leaderboard = Player.objects.order_by('-avg_days')[:20]
+    avg_kills_leaderboard = Player.objects.order_by('-avg_kills')[:20]
+    party_leaderboard = Player.objects.order_by('-party')[:20]
     return render(request, "zombieapp/leaderboard.html", {
         "user": request.user,"best_kills_leaderboard": best_kills_leaderboard,
         "best_days_leaderboard":best_days_leaderboard,
@@ -104,9 +104,10 @@ def profile(request,profile_name):
                 return HttpResponseRedirect('/login/')
             except:
                 return HttpResponse("Invalid password")
-        if "picture" in request.FILES:
-            player.picture = request.FILES["picture"]
-            player.save()
+        player.user = request.user
+        if 'picture' in request.FILES:
+            player.picture = request.FILES['picture']
+        player.save()
         statistics=dill.loads(Player.objects.get(user=request.user).statistics)
         players = Player.objects.all()
         user = request.user
