@@ -78,6 +78,7 @@ def leaderboard(request):
 
 def profile(request,profile_name):
 
+    profBadges = 0
     user = 0
     statistics = 0
     badges = 0
@@ -195,6 +196,8 @@ def game(request):
 
     move = None
     pos = None
+	
+	
 
     if request.POST:
         move = request.POST.get('move')
@@ -210,7 +213,10 @@ def game(request):
 
     if move in g.turn_options():
         if move in ['MOVE','SEARCH'] and pos:
-            g.take_turn(move, int(pos))
+			try:
+				g.take_turn(move, int(pos))
+			except:
+				pass
         else:
             g.take_turn(move)
 
