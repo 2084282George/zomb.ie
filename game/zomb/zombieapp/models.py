@@ -23,6 +23,7 @@ class Player(models.Model):
         return self.user.username
 
 class Guest(models.Model):
+    ip = PickledObjectField(default = "")
     game = PickledObjectField(default=dill.dumps(Game()))
     badges = PickledObjectField(default=dill.dumps([]))
     statistics = PickledObjectField(default=dill.dumps(

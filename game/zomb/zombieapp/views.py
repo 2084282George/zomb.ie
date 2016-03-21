@@ -178,11 +178,12 @@ def profile(request,profile_name):
 
 def game(request):
     player = Guest()
+    player.ip = dill.dumps(request.META.get("REMOTE_ADDR"))
     if request.user.is_authenticated():
         player = Player.objects.get(user=request.user)
     else:
         try:
-            player = Guest.objects.get()
+            player = Guest.objects.get(ip=dill.dumps(request.META.get("REMOTE_ADDR")))
         except:
             pass
 
@@ -253,5 +254,12 @@ def game(request):
             {"message": "Aaarrrgh: You are dead! Game Over!", "user": request.user, "options": []})
 
     save()
+
+    if request.POST:
+        if request.POST.get("restart") == "true":
+            g = Game()
+            save()
+            return HttpResponseRedirect('/game/')
     return render(request, "zombieapp/game.html",
-        {"message": show_game_screen(g) + turn_options(g), "user": request.user, "options": g.turn_options})
+        {"message": show_game_screen(g) +
+                    turn_options(g), "user": request.user, "options": g.turn_options})

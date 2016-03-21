@@ -19,4 +19,12 @@
         </form>
     {% endfor %}
 
+    {% if not user.is_authenticated %}
+        <form method="post" action="/game/">
+            {% csrf_token %}
+            <input type="text" name="restart" value="true" hidden>
+            <input type="submit" value="Restart">
+        </form>
+    {% endif %}
+
 {% endblock %}
