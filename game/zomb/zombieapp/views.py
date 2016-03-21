@@ -92,6 +92,43 @@ def profile(request,profile_name):
         except:
             player.user = request.user
             player.save()
+
+        player.statistics = dill.loads(player.statistics)
+        player.badges = dill.loads(player.badges)
+
+        if player.statistics['games'] == 5:
+            player.badges += ['Games played (Bronze)']
+        if player.statistics['games'] == 10:
+            player.badges += ['Games played (Silver)']
+        if player.statistics['games'] == 20:
+            player.badges += ['Games played (Gold)']
+
+        if player.statistics['best_kills'] >= 10 and 'Zombies killed (Bronze)' not in player.badges:
+            player.badges += ['Zombies killed (Bronze)']
+        if player.statistics['best_kills'] >= 20 and 'Zombies killed (Silver)' not in player.badges:
+            player.badges += ['Zombies killed (Silver)']
+        if player.statistics['best_kills'] >= 50 and 'Zombies killed (Gold)' not in player.badges:
+            player.badges += ['Zombies killed (Gold)']
+
+        if player.statistics['best_days'] >= 5 and 'Days survived (Bronze)' not in player.badges:
+            player.badges += ['Days survived (Bronze)']
+        if player.statistics['best_days'] >= 10 and 'Days survived (Silver)' not in player.badges:
+            player.badges += ['Days survived (Silver)']
+        if player.statistics['best_days'] >= 20 and 'Days survived (Gold)' not in player.badges:
+            player.badges += ['Days survived (Gold)']
+
+        if player.statistics['party'] >= 10 and 'Party size (Bronze)' not in player.badges:
+            player.badges += ['Party size (Bronze)']
+        if player.statistics['party'] >= 20 and 'Party size (Silver)' not in player.badges:
+            player.badges += ['Party size (Silver)']
+        if player.statistics['party'] >= 30 and 'Party size (Gold)' not in player.badges:
+            player.badges += ['Party size (Gold)']
+
+        player.statistics = dill.dumps(player.statistics)
+        player.badges = dill.dumps(player.badges)
+
+        player.save()
+
         badges = dill.loads(player.badges)
         if len(badges) == 0:
             flag = False
@@ -206,34 +243,6 @@ def game(request):
         if player.statistics['best_kills'] < g.player_state.kills:
             player.statistics['best_kills'] = g.player_state.kills
         player.statistics['games'] += 1
-
-        if player.statistics['games'] == 5:
-            player.badges += ['Games played (Bronze)']
-        if player.statistics['games'] == 10:
-            player.badges += ['Games played (Silver)']
-        if player.statistics['games'] == 20:
-            player.badges += ['Games played (Gold)']
-
-        if player.statistics['best_kills'] >= 10 and 'Zombies killed (Bronze)' not in player.badges:
-            player.badges += ['Zombies killed (Bronze)']
-        if player.statistics['best_kills'] >= 20 and 'Zombies killed (Silver)' not in player.badges:
-            player.badges += ['Zombies killed (Silver)']
-        if player.statistics['best_kills'] >= 50 and 'Zombies killed (Gold)' not in player.badges:
-            player.badges += ['Zombies killed (Gold)']
-
-        if player.statistics['best_days'] >= 5 and 'Days survived (Bronze)' not in player.badges:
-            player.badges += ['Days survived (Bronze)']
-        if player.statistics['best_days'] >= 10 and 'Days survived (Silver)' not in player.badges:
-            player.badges += ['Days survived (Silver)']
-        if player.statistics['best_days'] >= 20 and 'Days survived (Gold)' not in player.badges:
-            player.badges += ['Days survived (Gold)']
-
-        if player.statistics['party'] >= 10 and 'Party size (Bronze)' not in player.badges:
-            player.badges += ['Party size (Bronze)']
-        if player.statistics['party'] >= 20 and 'Party size (Silver)' not in player.badges:
-            player.badges += ['Party size (Silver)']
-        if player.statistics['party'] >= 30 and 'Party size (Gold)' not in player.badges:
-            player.badges += ['Party size (Gold)']
 
         player.statistics = dill.dumps(player.statistics)
         player.badges = dill.dumps(player.badges)
